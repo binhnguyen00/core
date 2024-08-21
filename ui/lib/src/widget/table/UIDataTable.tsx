@@ -7,9 +7,10 @@ import * as PopupManager from "../popup/PopupManager";
 
 import { Button } from "../button/UIButton";
 import { SearchBar } from "./UISearchBar";
+import { Tooltip } from "../../widget/common/UITooltip";
+import { useGetTableContext } from "../../custom-hook/useGetTableContext";
 
 import "./scss/_table.scss"
-import { Tooltip } from "widget/common/UITooltip";
 
 export interface DataTableColumn {
   field: string;
@@ -30,11 +31,13 @@ export interface DataTableProps {
   onUseSearch?: (sqlArgs: any) => void;
   onRowSelection?: (selectedRecords: any[]) => void;
   enableRowSelection?: boolean;
+  customButtons?: React.JSX.Element[];
+  getTableContext?: (tableInstance: Tanstack.Table<any>) => void;
 }
 
 export function DataTable({ 
-    title, height = "100%", debug = false, records, columns, enableRowSelection = false, 
-    onCreateCallBack, onDeleteCallBack, onUseSearch, onRowSelection
+    title, height = "100%", debug = false, records, columns, enableRowSelection = false, customButtons,
+    onCreateCallBack, onDeleteCallBack, onUseSearch, onRowSelection, getTableContext
   }: DataTableProps) {
 
   const columnConfigs = React.useMemo(
@@ -67,6 +70,20 @@ export function DataTable({
     debugColumns: debug,
   } as Tanstack.TableOptions<any>)
 
+  const renderCustomButtons = (): React.JSX.Element[] => {
+    if (!customButtons) return null;
+    if (customButtons.length === 0) return null;
+    const btns = customButtons.map((customButton, index) => {
+      return (
+        <React.Fragment key={`cus-btn-${index}`}>
+          {customButton}
+        </React.Fragment>
+      )
+    })
+    return btns;
+  }
+
+  useGetTableContext({table, getTableContext}); // Get Table Context
   return (
     <React.Fragment>
 
@@ -83,7 +100,7 @@ export function DataTable({
             <Button
               className="mx-1" icon={<BsIcon.BsTrash />} title="Delete"
               onClick={() => {
-                const ids = TableUtils.getSelectedIds(table);
+                const ids = TableUtils.getSelectedIds(table.getSelectedRowModel().rows);
                 if (!ids?.length) {
                   PopupManager.createWarningPopup(<div> {"Please select at least 1 record"} </div>);
                   return;
@@ -103,6 +120,8 @@ export function DataTable({
               )
             } else return null
           })()}
+          {/* toolbar: buttons: customs */}
+          {renderCustomButtons()}
         </div>
 
         {/* toolbar: search */}
@@ -234,7 +253,7 @@ export function DataTable({
                 <Button 
                   title="Select" icon={<div><FaIcon.FaListCheck/></div>}
                   onClick={(event: Event) => {
-                    const selectedRecords = TableUtils.getSelectedRows(table);
+                    const selectedRecords = TableUtils.getSelectedRows(table.getSelectedRowModel().rows);
                     if (!selectedRecords.length) {
                       PopupManager.createWarningPopup(<div> {"Please select at least 1 record"} </div>);
                       return;
