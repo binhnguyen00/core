@@ -8,7 +8,6 @@ import * as PopupManager from "../popup/PopupManager";
 import { Button } from "../button/UIButton";
 import { SearchBar } from "./UISearchBar";
 import { Tooltip } from "../../widget/common/UITooltip";
-import { useGetTableContext } from "../../custom-hook/useGetTableContext";
 
 import "./scss/_table.scss"
 
@@ -83,7 +82,13 @@ export function DataTable({
     return btns;
   }
 
-  useGetTableContext({table, getTableContext}); // Get Table Context
+  // Returns DataTable Context
+  React.useEffect(() => {
+    if (getTableContext) {
+      getTableContext(table);
+    }
+  }, [getTableContext, table]);
+
   return (
     <React.Fragment>
 
