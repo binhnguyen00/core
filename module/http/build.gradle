@@ -1,0 +1,8 @@
+base.setArchivesName('marci-module-http')
+
+dependencies {
+  implementation group: 'org.springframework', name: 'spring-webmvc', version: "${springFrameworkVersion}"
+  implementation group: 'org.springframework.security', name: 'spring-security-core', version: "${springFrameworkVersion}"
+
+  api project(":marci-lib-common")
+}

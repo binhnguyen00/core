@@ -1,0 +1,48 @@
+.table-container {
+  border: 1px solid lightgray;
+  overflow-x: scroll;
+  width: 100%;
+  position: relative;
+}
+
+table {
+  // Box-shadow and borders will not work with position: sticky otherwise
+  border-collapse: separate !important;
+  border-spacing: 0;
+}
+
+th {
+  background-color: rgb(240, 240, 240); // Header color
+  border-bottom: 1px solid lightgray;
+  font-weight: bold;
+  padding: 2px 4px;
+  position: relative;
+  text-align: center;
+}
+
+td {
+  background-color: white; // IMPORTANT: this will hide the cells under pinned columns
+  box-shadow: inset 0 0 0 1px lightgray; // Border cells
+  padding: 2px 4px;
+}
+
+tbody tr:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.resizer {
+  background: rgba(0, 0, 0, 0.5);
+  cursor: col-resize;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  touch-action: none;
+  user-select: none;
+  width: 5px;
+
+  &.isResizing {
+    background: blue;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,103 @@
+plugins {
+  id 'java'
+  id 'java-library'
+  id 'base'
+
+  id 'com.adarshr.test-logger' version "${testLoggerVersion}"
+}
+
+allprojects {}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'java-library'
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.adarshr.test-logger'
+
+  group = 'net.marci.core'
+  version = "${marciCoreVersion}"
+
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(21)
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+
+  tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+  }
+
+  artifacts { // This comes with task "sourcesJar"
+    archives sourcesJar
+  }
+
+  publishing {
+    publications {
+      "$project.name"(MavenPublication) {
+        groupId project.group
+        artifactId project.name
+        version project.version
+        from components.java
+        artifact tasks.sourcesJar
+      }
+    }
+  }
+
+  dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
+    implementation group: 'org.slf4j', name: 'jul-to-slf4j', version: "${slf4jVersion}"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: "${apacheLoggingLog4jVersion}"
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: "${jakartaPersistenceApiVersion}"
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: "${springBootVersion}"
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "${jacksonVersion}"
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: "${jacksonVersion}"
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitJupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitJupiterVersion}"
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
+  }
+
+  configurations {
+    compileOnly {
+      extendsFrom annotationProcessor
+    }
+  }
+
+  tasks.register("create-dirs") {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+  }
+
+  test {
+    testlogger {
+      theme 'mocha-parallel' // other options: 'plain', 'standard', 'mocha', 'mocha-parallel'
+      showStandardStreams true
+      showPassed true
+      showSkipped true
+      showFailed true
+    }
+    useJUnitPlatform() {
+      includeEngines 'junit-jupiter'
+      excludeTags 'skip'
+      includeTags 'unit'
+    }
+  }
+}
