@@ -1,0 +1,69 @@
+# Ignore Gradle build files
+.gradle/
+build/
+
+# Ignore IntelliJ IDEA files
+.idea/
+*.iml
+
+# Ignore Eclipse files
+.project
+.classpath
+.settings/
+
+# Ignore VS Code files
+.vscode/
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignore log files
+*.log
+
+# Ignore compiled Java class files
+*.class
+
+# Ignore generated JAR files
+*.jar
+
+# Ignore generated WAR files
+*.war
+
+# Ignore generated EAR files
+*.ear
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore Windows files
+Thumbs.db
+desktop.ini
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+node_modules
+dist
+dist-ssr
+*.local
+*.tsbuildinfo
+package-lock.json
+pnpm-lock.yaml
+
+# Marci Gradle release folder
+release/
+core/
