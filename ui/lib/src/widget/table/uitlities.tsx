@@ -1,18 +1,16 @@
 import React from "react";
 
-import "./scss/_table.scss"
-import { ColumnDef, Column, Table, VisibilityState, Row } from '@tanstack/react-table'
+import { ColumnDef, Column, VisibilityState, Row } from '@tanstack/react-table'
 import { StorageState } from "../Interface";
 import { DateUtils } from "../../utilities/DateUtils";
 import { DataTableColumn, DataTableProps } from "./UIDataTable";
 
-export function getSelectedIds(table: Table<any>): number[] | undefined {
+export function getSelectedIds(rows: Row<any>[]): number[] | undefined {
   try {
     let selectedRowIds = [] as number[]
-    const selectedRows: Row<any>[] = table.getSelectedRowModel().rows;
-    if (!selectedRows.length) return selectedRowIds;
+    if (!rows.length) return selectedRowIds;
     else {
-      selectedRowIds = table.getSelectedRowModel().rows.map((row) => {
+      selectedRowIds = rows.map((row) => {
         return row.original.id as number
       });
       return selectedRowIds as number[];
@@ -23,13 +21,12 @@ export function getSelectedIds(table: Table<any>): number[] | undefined {
   }
 }
 
-export function getSelectedRows(table: Table<any>): any[] | undefined {
+export function getSelectedRows(rows: Row<any>[]): any[] | undefined {
   try {
     let records = [] as any[]
-    const selectedRows: Row<any>[] = table.getSelectedRowModel().rows;
-    if (!selectedRows.length) return records;
+    if (!rows.length) return records;
     else {
-      records = table.getSelectedRowModel().rows.map((row) => {
+      records = rows.map((row) => {
         return row.original as any
       });
       return records as any[];
@@ -114,4 +111,10 @@ export function initSqlArgs(
     modifiedTime: modifiedTime,
     storageState: storageState,
   }
+}
+
+export const tableUtils = {
+  getSelectedIds,
+  getSelectedRows,
+  initSqlArgs,
 }

@@ -27,10 +27,10 @@ export function Button(props: ButtonProps) {
   };
 
   return (
-    <div>
+    <div className={className}>
       <button 
         type="button" style={{ padding: "0.1rem 0.2rem" }}
-        className={`flex-h btn btn-${type} ${className}`} 
+        className={`flex-h btn btn-${type}`} 
         onClick={onClick} disabled={disabled}> 
         {
           iconPosition === "left" && icon

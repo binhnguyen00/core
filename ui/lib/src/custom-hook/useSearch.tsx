@@ -1,6 +1,8 @@
 import React from "react";
+
 import { ServerResponse } from "server/Interface";
 import { rpc } from "server/RPC";
+
 import * as PopupManager from "../widget/popup/PopupManager";
 
 interface useSearchProps {

@@ -43,6 +43,8 @@ export function Tree({
 
   const buildTree = (records: any[]): any[] => {
     const tree: any[] = [];
+    if (!records.length) return tree;
+
     const lookup: { [key: number]: any } = {};
 
     records.forEach((record) => {
@@ -60,47 +62,50 @@ export function Tree({
     return tree;
   };
 
-  const renderTree = (nodes: any[]): JSX.Element => (
-    <>
-      {nodes.map((node) => {
-        const isExpanded = activeNodes.has(node["id"]);
-        const isChild = activeNodes.has(node[parentField]);
-        return (
-          <div key={node.id} style={{ paddingLeft: isChild && 20 }}>
-            {node.children && node.children.length > 0 ? (
-              <>
-                <div className='flex-h'>
-                  {isExpanded ? (
-                    <div><FaRegFolderOpen
-                      style={{ cursor: "pointer" }} className="m-1"
-                      onClick={() => toggleNode(node["id"])}
-                    /></div>
-                  ) : (
-                    <div><FaRegFolderClosed
+  const renderTree = (nodes: any[]): JSX.Element => {
+    if (!nodes.length) return null;
+    return (
+      <>
+        {nodes.map((node) => {
+          const isExpanded = activeNodes.has(node["id"]);
+          const isChild = activeNodes.has(node[parentField]);
+          return (
+            <div key={node.id} style={{ paddingLeft: isChild && 20 }}>
+              {node.children && node.children.length > 0 ? (
+                <>
+                  <div className='flex-h'>
+                    {isExpanded ? (
+                      <div><FaRegFolderOpen
                         style={{ cursor: "pointer" }} className="m-1"
                         onClick={() => toggleNode(node["id"])}
-                    /></div>
-                  )}
-                  {renderDisplay ? renderDisplay(node) : (
-                    <span className={`${displayClassName ? displayClassName : undefined}`}>
-                      {node[displayField]}
-                    </span>
-                  )}
-                </div>
-                {isExpanded && renderTree(node.children)}
-              </>
-            ) : (
-              renderDisplay ? renderDisplay(node, isChild) : (
-                <span style={{ paddingLeft: isChild && 20 }} className={displayClassName ? displayClassName : undefined}>
-                  {node[displayField]}
-                </span>
-              )
-            )}
-          </div>
-        );
-      })}
-    </>
-  );
+                      /></div>
+                    ) : (
+                      <div><FaRegFolderClosed
+                          style={{ cursor: "pointer" }} className="m-1"
+                          onClick={() => toggleNode(node["id"])}
+                      /></div>
+                    )}
+                    {renderDisplay ? renderDisplay(node) : (
+                      <span className={`${displayClassName ? displayClassName : undefined}`}>
+                        {node[displayField]}
+                      </span>
+                    )}
+                  </div>
+                  {isExpanded && renderTree(node.children)}
+                </>
+              ) : (
+                renderDisplay ? renderDisplay(node, isChild) : (
+                  <span style={{ paddingLeft: isChild && 20 }} className={displayClassName ? displayClassName : undefined}>
+                    {node[displayField]}
+                  </span>
+                )
+              )}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
 
   const treeData = buildTree(records);
 
