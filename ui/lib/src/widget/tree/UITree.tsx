@@ -5,12 +5,28 @@ import { Tooltip } from '../../widget/common/UITooltip';
 interface TreeProps {
   records: any[];
   title?: string;
+  rootTitle?: string;
+  onSelectRoot?: () => void;
   parentField?: string;
   displayField: string;
   displayClassName?: string;
   renderDisplay?: (record: any, shouldHavePadding?: boolean) => HTMLElement | any;
 }
-export function Tree({ records = [], parentField = "parentId", displayField, renderDisplay, title, displayClassName }: TreeProps) {
+
+/**
+ * @param {any[]} records A List of records.
+ * @param {string | undefined} displayField Use this Field to render record[displayField] value (Tree node label).
+ * @param {string | undefined} parentField Use this Field to filter out records with their parents. 
+ *                                         Each parent is considered a folder.
+ *                                         Default is "parentId". Base on Backend design, Table should have "parentId" field. 
+ * @param {function} renderDisplay Override default render record[displayField].
+ * @param {string | undefined} displayClassName Override default displayField style.
+ * @param {string | undefined} title Title of tree
+ * @param {string | undefined} title Title of the root folder (root node)
+*/
+export function Tree({ 
+  records = [], parentField = "parentId", displayField, renderDisplay, title, displayClassName, rootTitle, onSelectRoot }: TreeProps) {
+
   const [activeNodes, setActiveNodes] = React.useState<Set<number>>(new Set());
 
   const toggleNode = (id: number) => {
@@ -116,6 +132,13 @@ export function Tree({ records = [], parentField = "parentId", displayField, ren
       {/* Render Tree Body */}
       {treeData.length > 0 && (
         <div className='m-0 p-1' style={{ overflowX: "auto", maxWidth: "100%", whiteSpace: "nowrap" }}> 
+          {(() => {
+            return (
+              <div className='clickable fw-bold px-1' onClick={onSelectRoot}>
+                {rootTitle ? rootTitle : "All"}
+              </div>
+            )
+          })()}
           {renderTree(treeData)}
         </div>
       )}
