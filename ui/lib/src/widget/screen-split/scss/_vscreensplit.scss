@@ -1,0 +1,11 @@
+.resize-handle {
+  width: 5px; /* Adjust width for better handling */
+  cursor: col-resize;
+  background-color: #acacac;
+  opacity: 0;
+  transition: opacity 0.2s; /* Smooth transition for showing/hiding */
+}
+
+.resize-handle:hover {
+  opacity: 0.5;
+}
