@@ -118,9 +118,11 @@ export function DataTable({
             if (hasChild) {
               return (
                 <Tooltip position="top" content={"Expand All"} tooltip={
-                  <FaIcon.FaFolderTree 
-                    className="mt-1" style={{ cursor: "pointer" }} 
-                    onClick={() => {if (rows.length) rows.forEach(row => toggleRowExpansion(row.id))}}/>
+                  <div>
+                    <FaIcon.FaFolderTree 
+                      className="mt-1" style={{ cursor: "pointer" }} 
+                      onClick={() => {if (rows.length) rows.forEach(row => toggleRowExpansion(row.id))}}/>
+                  </div>
                 }/>
               )
             } else return null
@@ -229,12 +231,16 @@ export function DataTable({
                                 {/* Render the expand/collapse button only in the first cell of the row */}
                                 {isFirstRootCell && (
                                   <>{isExpanded 
-                                    ? <FaIcon.FaRegFolderOpen 
-                                        style={{ cursor: "pointer" }} className="m-1" 
-                                        onClick={(event: any) => toggleRowExpansion(row.id)}/>
-                                    : <FaIcon.FaRegFolderClosed 
-                                        style={{ cursor: "pointer" }} className="m-1" 
-                                        onClick={(event: any) => toggleRowExpansion(row.id)}/>
+                                    ? <div>
+                                        <FaIcon.FaRegFolderOpen 
+                                          style={{ cursor: "pointer" }} className="m-1" 
+                                          onClick={(event: any) => toggleRowExpansion(row.id)}/>
+                                      </div>
+                                    : <div>
+                                        <FaIcon.FaRegFolderClosed 
+                                          style={{ cursor: "pointer" }} className="m-1" 
+                                          onClick={(event: any) => toggleRowExpansion(row.id)}/>
+                                      </div> 
                                   }</>
                                 )}
                                 {Tanstack.flexRender(cell.column.columnDef.cell, cell.getContext())}
