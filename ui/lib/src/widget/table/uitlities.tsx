@@ -3,9 +3,9 @@ import React from "react";
 import { ColumnDef, Column, VisibilityState, Row } from '@tanstack/react-table'
 import { StorageState } from "../Interface";
 import { DateUtils } from "../../utilities/DateUtils";
-import { DataTableColumn, DataTableProps } from "./UIDataTable";
+import { DataTableColumn, DataTableContext, DataTableProps } from "./UIDataTable";
 
-export function getSelectedIds(rows: Row<any>[]): number[] | undefined {
+export function getSelectedRecordsIds(rows: Row<any>[]): number[] | undefined {
   try {
     let selectedRowIds = [] as number[]
     if (!rows.length) return selectedRowIds;
@@ -21,7 +21,7 @@ export function getSelectedIds(rows: Row<any>[]): number[] | undefined {
   }
 }
 
-export function getSelectedRows(rows: Row<any>[]): any[] | undefined {
+export function getSelectedRecords(rows: Row<any>[]): any[] | undefined {
   try {
     let records = [] as any[]
     if (!rows.length) return records;
@@ -113,8 +113,17 @@ export function initSqlArgs(
   }
 }
 
+export function initTableCtx(): DataTableContext {
+  return {
+    selectedRows: [],
+    selectedRecords: [],
+    selectedRecordsIds: [],
+  }
+}
+
 export const tableUtils = {
-  getSelectedIds,
-  getSelectedRows,
-  initSqlArgs,
+  getSelectedIds: getSelectedRecordsIds,
+  getSelectedRows: getSelectedRecords,
+  initSqlArgs: initSqlArgs,
+  initTableCtx: initTableCtx,
 }

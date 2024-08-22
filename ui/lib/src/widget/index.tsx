@@ -1,4 +1,4 @@
-export { DataTable, DataTableColumn, DataTableProps } from "./table/UIDataTable";
+export { DataTable, DataTableColumn, DataTableProps, DataTableContext } from "./table/UIDataTable";
 
 export { Tree } from "./tree/UITree";
 

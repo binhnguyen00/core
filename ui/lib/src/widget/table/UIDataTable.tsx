@@ -11,6 +11,17 @@ import { Tooltip } from "../../widget/common/UITooltip";
 
 import "./scss/_table.scss"
 
+/**
+ * @param selectedRows The Tanstack selected rows object 
+ * @param selectedRecords The data that render in table
+ * @param selectedRecordsIds The ids of data that render in table
+ */
+export interface DataTableContext {
+  selectedRows: any[]; 
+  selectedRecords: any[];
+  selectedRecordsIds: number[];
+}
+
 export interface DataTableColumn {
   field: string;
   header: string;
@@ -30,12 +41,13 @@ export interface DataTableProps {
   onUseSearch?: (sqlArgs: any) => void;
   onRowSelection?: (selectedRecords: any[]) => void;
   enableRowSelection?: boolean;
-  customButtons?: React.JSX.Element[];
-  getTableContext?: (tableInstance: Tanstack.Table<any>) => void;
+  toolbarButtons?: React.JSX.Element[];
+  footerButtons?: React.JSX.Element[];
+  getTableContext?: (tableInstance: DataTableContext) => void;
 }
 
 export function DataTable({ 
-    title, height = "100%", debug = false, records, columns, enableRowSelection = false, customButtons,
+    title, height = "100%", debug = false, records, columns, enableRowSelection = false, toolbarButtons, footerButtons,
     onCreateCallBack, onDeleteCallBack, onUseSearch, onRowSelection, getTableContext
   }: DataTableProps) {
 
@@ -70,12 +82,12 @@ export function DataTable({
   } as Tanstack.TableOptions<any>)
 
   const renderCustomButtons = (): React.JSX.Element[] => {
-    if (!customButtons) return null;
-    if (customButtons.length === 0) return null;
-    const btns = customButtons.map((customButton, index) => {
+    if (!toolbarButtons) return null;
+    if (toolbarButtons.length === 0) return null;
+    const btns = toolbarButtons.map((toolbarBtn, index) => {
       return (
         <React.Fragment key={`cus-btn-${index}`}>
-          {customButton}
+          {toolbarBtn}
         </React.Fragment>
       )
     })
@@ -85,9 +97,14 @@ export function DataTable({
   // Returns DataTable Context
   React.useEffect(() => {
     if (getTableContext) {
-      getTableContext(table);
+      const tableInstance: DataTableContext = {
+        selectedRows: table.getSelectedRowModel().rows || [],
+        selectedRecords: TableUtils.getSelectedRecords(table.getSelectedRowModel().rows) || [],
+        selectedRecordsIds: TableUtils.getSelectedRecordsIds(table.getSelectedRowModel().rows) || [],
+      }
+      getTableContext(tableInstance);
     }
-  }, [getTableContext, table]);
+  }, [ rowSelection ]);
 
   return (
     <React.Fragment>
@@ -105,7 +122,7 @@ export function DataTable({
             <Button
               className="mx-1" icon={<BsIcon.BsTrash />} title="Delete"
               onClick={() => {
-                const ids = TableUtils.getSelectedIds(table.getSelectedRowModel().rows);
+                const ids = TableUtils.getSelectedRecordsIds(table.getSelectedRowModel().rows);
                 if (!ids?.length) {
                   PopupManager.createWarningPopup(<div> {"Please select at least 1 record"} </div>);
                   return;
@@ -264,7 +281,7 @@ export function DataTable({
                 <Button 
                   title="Select" icon={<div><FaIcon.FaListCheck/></div>}
                   onClick={(event: Event) => {
-                    const selectedRecords = TableUtils.getSelectedRows(table.getSelectedRowModel().rows);
+                    const selectedRecords = TableUtils.getSelectedRecords(table.getSelectedRowModel().rows);
                     if (!selectedRecords.length) {
                       PopupManager.createWarningPopup(<div> {"Please select at least 1 record"} </div>);
                       return;
