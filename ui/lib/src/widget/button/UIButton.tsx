@@ -72,9 +72,9 @@ export function DropdownButton({
       </button>
 
       <ul className="dropdown-menu">
-        {dropDownItems.map((item) => {
+        {dropDownItems.map((item, index) => {
           return (
-            <li className="dropdown-item">
+            <li className="dropdown-item" key={`dropdown-btn-${index}`}>
               {item}
             </li>
           )

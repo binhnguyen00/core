@@ -1,13 +1,15 @@
 import React from "react";
-import * as BsIcon from "react-icons/bs";
-import * as FaIcon from "react-icons/fa6"
+import { BsPlus, BsTrash, BsArchiveFill } from "react-icons/bs";
+import { FaListCheck, FaFolderTree, FaRegFolderOpen, FaRegFolderClosed } from "react-icons/fa6"
+import { BiSolidArchiveOut } from "react-icons/bi";
 import * as Tanstack from '@tanstack/react-table'
 import * as TableUtils from "./uitlities";
 import * as PopupManager from "../popup/PopupManager";
 
-import { Button } from "../button/UIButton";
+import { Button, DropdownButton } from "../button/UIButton";
 import { SearchBar } from "./UISearchBar";
 import { Tooltip } from "../../widget/common/UITooltip";
+import { Popover } from "../../widget/popover/UIPopover";
 
 import "./scss/_table.scss"
 
@@ -36,10 +38,12 @@ export interface DataTableProps {
   title?: string;
   height?: number | string;
   debug?: boolean;
-  onCreateCallBack?: () => void;
-  onDeleteCallBack?: (targetIds: number[]) => void;
+  onCreate?: () => void;
+  onDelete?: (targetIds: number[]) => void;
   onUseSearch?: (sqlArgs: any) => void;
   onRowSelection?: (selectedRecords: any[]) => void;
+  onArchive?: (targetIds: number[]) => void;
+  onActive?: (targetIds: number[]) => void;
   enableRowSelection?: boolean;
   toolbarButtons?: React.JSX.Element[];
   footerButtons?: React.JSX.Element[];
@@ -48,7 +52,7 @@ export interface DataTableProps {
 
 export function DataTable({ 
     title, height = "100%", debug = false, records, columns, enableRowSelection = false, toolbarButtons, footerButtons,
-    onCreateCallBack, onDeleteCallBack, onUseSearch, onRowSelection, getTableContext
+    onCreate, onDelete, onActive, onArchive, onUseSearch, onRowSelection, getTableContext
   }: DataTableProps) {
 
   const columnConfigs = React.useMemo(
@@ -81,19 +85,6 @@ export function DataTable({
     debugColumns: debug,
   } as Tanstack.TableOptions<any>)
 
-  const renderCustomButtons = (): React.JSX.Element[] => {
-    if (!toolbarButtons) return null;
-    if (toolbarButtons.length === 0) return null;
-    const btns = toolbarButtons.map((toolbarBtn, index) => {
-      return (
-        <React.Fragment key={`toolbar-btn-${index}`}>
-          {toolbarBtn}
-        </React.Fragment>
-      )
-    })
-    return btns;
-  }
-
   // Returns DataTable Context
   React.useEffect(() => {
     if (getTableContext) {
@@ -117,16 +108,16 @@ export function DataTable({
 
         {/* toolbar: buttons */}
         <div className="flex-h my-1">
-          {onCreateCallBack && <Button icon={<BsIcon.BsPlus />} title="Create" onClick={() => onCreateCallBack()} />}
-          {onDeleteCallBack && (
+          {onCreate && <Button icon={<BsPlus/>} title="Create" onClick={() => onCreate()} />}
+          {onDelete && (
             <Button
-              className="mx-1" icon={<BsIcon.BsTrash />} title="Delete"
+              className="mx-1" icon={<BsTrash/>} title="Delete"
               onClick={() => {
                 const ids = TableUtils.getSelectedRecordsIds(table.getSelectedRowModel().rows);
                 if (!ids?.length) {
                   PopupManager.createWarningPopup(<div> {"Please select at least 1 record"} </div>);
                   return;
-                } else onDeleteCallBack(ids);
+                } else onDelete(ids);
               }} />
           )}
           {(() => { // Render expand all rows Button
@@ -136,16 +127,32 @@ export function DataTable({
               return (
                 <Tooltip position="top" content={"Expand All"} tooltip={
                   <div>
-                    <FaIcon.FaFolderTree 
-                      className="mt-1" style={{ cursor: "pointer" }} 
+                    <FaFolderTree 
+                      className="mt-1 mx-1" style={{ cursor: "pointer" }} 
                       onClick={() => {if (rows.length) rows.forEach(row => toggleRowExpansion(row.id))}}/>
                   </div>
                 }/>
               )
             } else return null
           })()}
-          {/* toolbar: buttons: customs */}
-          {renderCustomButtons()}
+          {(() => { // Render Active/Archive buttons
+            if (onActive || onArchive) {
+              const selectedRecordsIds = TableUtils.getSelectedRecordsIds(table.getSelectedRowModel().rows);
+              const activeBtn = onActive ? (
+                <div className="clickable text-center" onClick={() => onActive(selectedRecordsIds)}> 
+                  <div><BiSolidArchiveOut/></div>
+                  {"Active"} 
+                </div>
+              ) : null;
+              const archiveBtn = onArchive ? (
+                <div className="clickable text-center" onClick={() => onActive(selectedRecordsIds)}> 
+                  <div><BsArchiveFill/></div>
+                  {"Archive"} 
+                </div>
+              ) : null;
+              return <DropdownButton title="Storage" dropDownItems={[ activeBtn, archiveBtn]}/>
+            } else return null;
+          })()}
         </div>
 
         {/* toolbar: search */}
@@ -249,12 +256,12 @@ export function DataTable({
                                 {isFirstRootCell && (
                                   <>{isExpanded 
                                     ? <div>
-                                        <FaIcon.FaRegFolderOpen 
+                                        <FaRegFolderOpen 
                                           style={{ cursor: "pointer" }} className="m-1" 
                                           onClick={(event: any) => toggleRowExpansion(row.id)}/>
                                       </div>
                                     : <div>
-                                        <FaIcon.FaRegFolderClosed 
+                                        <FaRegFolderClosed 
                                           style={{ cursor: "pointer" }} className="m-1" 
                                           onClick={(event: any) => toggleRowExpansion(row.id)}/>
                                       </div> 
@@ -279,7 +286,7 @@ export function DataTable({
             <tfoot className="py-1">
               {onRowSelection && (
                 <Button 
-                  title="Select" icon={<div><FaIcon.FaListCheck/></div>}
+                  title="Select" icon={<div><FaListCheck/></div>}
                   onClick={(event: Event) => {
                     const selectedRecords = TableUtils.getSelectedRecords(table.getSelectedRowModel().rows);
                     if (!selectedRecords.length) {
@@ -290,11 +297,16 @@ export function DataTable({
                 />
               )}
               {/* footer: custom buttons */}
-              {footerButtons.map((button, index) => (
-                <React.Fragment key={`footer-btn-${index}`}>
-                  {button}
-                </React.Fragment>
-              ))}
+              {(() => {
+                if (!footerButtons) return null;
+                if (footerButtons.length === 0) return null;
+                const btns = footerButtons.map((button, index) => (
+                  <React.Fragment key={`footer-btn-${index}`}>
+                    {button}
+                  </React.Fragment>
+                ))
+                return btns;
+              })()}
             </tfoot>
 
           </table>

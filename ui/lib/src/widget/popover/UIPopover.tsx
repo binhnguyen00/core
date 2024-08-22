@@ -21,7 +21,7 @@ interface PopoverProps {
 }
 export function Popover(
   { title, header, body, placement, 
-    containerPadding = 0, contentHeight, contentWidth = 200, className 
+    containerPadding = 0, contentHeight, contentWidth = 200, className = ""
   }: PopoverProps) {
 
   const [show, setShow] = React.useState(false);
@@ -43,8 +43,8 @@ export function Popover(
   const popoverIcon = iconOrientation[placement];
 
   return (
-    <div ref={ref}>
-      <Button className="my-1" onClick={handleClick} title={title} icon={popoverIcon}/>
+    <div className={className} ref={ref}>
+      <Button onClick={handleClick} title={title} icon={popoverIcon}/>
 
       <ReactBsOverlay
         show={show} target={target} placement={placement} 

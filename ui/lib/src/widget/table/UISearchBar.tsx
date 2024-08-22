@@ -43,7 +43,7 @@ export function SearchBar({ title, onUseSearch }: SearchBarProps) {
     <> 
       <div>
         <Popover 
-          title="Filters" header="Filters" placement="bottom" contentWidth={400}
+          title="Filters" header="Filters" placement="bottom" contentWidth={400} className="my-1"
           body={
             <div className="p-1">
               <div className="flex-v">
