@@ -5,11 +5,15 @@ import { StorageState } from "../Interface";
 import { DateUtils } from "../../utilities/DateUtils";
 import { DataTableColumn, DataTableContext, DataTableProps } from "./UIDataTable";
 
+import * as PopupManager from "../../widget/popup/PopupManager";
+
 export function getSelectedRecordsIds(rows: Row<any>[]): number[] | undefined {
   try {
     let selectedRowIds = [] as number[]
-    if (!rows.length) return selectedRowIds;
-    else {
+    if (!rows.length) {
+      PopupManager.createWarningPopup(<div>{"Please select at least 1 row."}</div>);
+      return; 
+    } else {
       selectedRowIds = rows.map((row) => {
         return row.original.id as number
       });
@@ -24,8 +28,10 @@ export function getSelectedRecordsIds(rows: Row<any>[]): number[] | undefined {
 export function getSelectedRecords(rows: Row<any>[]): any[] | undefined {
   try {
     let records = [] as any[]
-    if (!rows.length) return records;
-    else {
+    if (!rows.length) {
+      PopupManager.createWarningPopup(<div>{"Please select at least 1 row."}</div>);
+      return;
+    } else {
       records = rows.map((row) => {
         return row.original as any
       });
