@@ -1,7 +1,8 @@
 import React from "react";
+import { BsCaretDownFill  } from "react-icons/bs";
 import { ButtonType } from "../Interface";
 
-declare interface ButtonProps {
+export interface ButtonProps {
   title?: string;
   type?: ButtonType;
   className?: string;
@@ -44,6 +45,42 @@ export function Button(props: ButtonProps) {
           : null
         }
       </button>
+    </div>
+  )
+}
+
+interface DropdownButtonProps extends ButtonProps {
+  dropDownItems?: React.JSX.Element[];
+}
+
+export function DropdownButton({ 
+  title = "untitled", type = "primary", icon = <BsCaretDownFill/>,
+  disabled = false, className = "", dropDownItems }: DropdownButtonProps) {
+
+  return (
+    <div className={`${className}`}>
+
+      <button 
+        type="button" 
+        className={`flex-h btn btn-${type}`} 
+        style={{ padding: "0.1rem 0.2rem" }}
+        aria-expanded="false" data-bs-toggle="dropdown"
+        disabled={disabled}
+      >
+        <div className="mx-1"> {title} </div>
+        <div> {icon} </div>
+      </button>
+
+      <ul className="dropdown-menu">
+        {dropDownItems.map((item) => {
+          return (
+            <li className="dropdown-item">
+              {item}
+            </li>
+          )
+        })}
+      </ul>
+
     </div>
   )
 }

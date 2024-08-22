@@ -6,7 +6,7 @@ export { Tree } from "./tree/UITree";
 export { Label } from "./common/UILabel";
 export { createLoading } from "./common/UILoading";
 export { Tooltip } from "./common/UITooltip";
-export { Button } from "./button/UIButton";
+export { Button, DropdownButton } from "./button/UIButton";
 
 export { 
   closeCurrentPopup, 
@@ -14,3 +14,5 @@ export {
 } from "./popup/PopupManager";
 
 export { VScreenSplit } from "./screen-split/VScreenSplit";
+
+export { Popover } from "./popover/UIPopover";
