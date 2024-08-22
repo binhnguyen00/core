@@ -86,7 +86,7 @@ export function DataTable({
     if (toolbarButtons.length === 0) return null;
     const btns = toolbarButtons.map((toolbarBtn, index) => {
       return (
-        <React.Fragment key={`cus-btn-${index}`}>
+        <React.Fragment key={`toolbar-btn-${index}`}>
           {toolbarBtn}
         </React.Fragment>
       )
@@ -276,7 +276,7 @@ export function DataTable({
             </tbody>
 
             {/* table: footer */}
-            <tfoot>
+            <tfoot className="py-1">
               {onRowSelection && (
                 <Button 
                   title="Select" icon={<div><FaIcon.FaListCheck/></div>}
@@ -289,6 +289,12 @@ export function DataTable({
                   }}
                 />
               )}
+              {/* footer: custom buttons */}
+              {footerButtons.map((button, index) => (
+                <React.Fragment key={`footer-btn-${index}`}>
+                  {button}
+                </React.Fragment>
+              ))}
             </tfoot>
 
           </table>
