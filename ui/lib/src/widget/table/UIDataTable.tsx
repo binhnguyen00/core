@@ -111,7 +111,7 @@ export function DataTable({
           {onCreate && <Button icon={<BsPlus/>} title="Create" onClick={() => onCreate()} />}
           {onDelete && (
             <Button
-              className="mx-1" icon={<BsTrash/>} title="Delete"
+              className="ms-1" icon={<BsTrash/>} title="Delete"
               onClick={() => {
                 const ids = TableUtils.getSelectedRecordsIds(table.getSelectedRowModel().rows);
                 if (!ids?.length) {
@@ -120,21 +120,6 @@ export function DataTable({
                 } else onDelete(ids);
               }} />
           )}
-          {(() => { // Render expand all rows Button
-            const rows = table.getRowModel().rows;
-            const hasChild = rows.some(row => rows.some(childRow => childRow.original["parentId"] === row.original["id"]));
-            if (hasChild) {
-              return (
-                <Tooltip position="top" content={"Expand All"} tooltip={
-                  <div>
-                    <FaFolderTree 
-                      className="mt-1 mx-1" style={{ cursor: "pointer" }} 
-                      onClick={() => {if (rows.length) rows.forEach(row => toggleRowExpansion(row.id))}}/>
-                  </div>
-                }/>
-              )
-            } else return null
-          })()}
           {(() => { // Render Active/Archive buttons
             if (onActive || onArchive) {
               const selectedRecordsIds = TableUtils.getSelectedRecordsIds(table.getSelectedRowModel().rows);
@@ -150,8 +135,23 @@ export function DataTable({
                   {"Archive"} 
                 </div>
               ) : null;
-              return <DropdownButton title="Storage" dropDownItems={[ activeBtn, archiveBtn]}/>
+              return <DropdownButton className="ms-1" title="Storage" dropDownItems={[ activeBtn, archiveBtn]}/>
             } else return null;
+          })()}
+          {(() => { // Render expand all rows Button
+            const rows = table.getRowModel().rows;
+            const hasChild = rows.some(row => rows.some(childRow => childRow.original["parentId"] === row.original["id"]));
+            if (hasChild) {
+              return (
+                <Tooltip className="ms-1" position="top" content={"Expand All"} tooltip={
+                  <div>
+                    <FaFolderTree 
+                      className="mt-1 mx-1" style={{ cursor: "pointer" }} 
+                      onClick={() => {if (rows.length) rows.forEach(row => toggleRowExpansion(row.id))}}/>
+                  </div>
+                }/>
+              )
+            } else return null
           })()}
         </div>
 
@@ -231,7 +231,7 @@ export function DataTable({
               {(() => {
                   const rows = table.getRowModel().rows;
                   const rootRows = rows.filter(row => !row.original["parentId"]); 
-                  
+
                   const renderRowWithChildren = (row: Tanstack.Row<any>, currentLevel: number) => {
                     const childRows = rows.filter(r => r.original["parentId"] === row.original["id"]);
                     const isExpanded = expandedRows[row.id];
