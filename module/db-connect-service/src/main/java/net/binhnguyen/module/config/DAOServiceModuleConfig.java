@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan(
   basePackages = {
-    "net.marci.module.daoservice",
+    "net.binhnguyen.module.daoservice",
   }
 )
 @EnableConfigurationProperties

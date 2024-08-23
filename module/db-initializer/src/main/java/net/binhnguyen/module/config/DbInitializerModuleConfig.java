@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan(
   basePackages = {
-    "net.binhnguyen.module.http",
+    "net.binhnguyen.module.dbinitializer",
   }
 )
 @EnableConfigurationProperties
 @EnableTransactionManagement
-public class HttpModuleConfig {
+public class DbInitializerModuleConfig {
 }
