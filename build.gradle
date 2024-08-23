@@ -14,8 +14,8 @@ subprojects {
   apply plugin: 'maven-publish'
   apply plugin: 'com.adarshr.test-logger'
 
-  group = 'net.marci.core'
-  version = "${marciCoreVersion}"
+  group = 'net.binhnguyen.core'
+  version = "${coreVersion}"
 
   java {
     toolchain {

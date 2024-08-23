@@ -231,6 +231,7 @@ export function DataTable({
               {(() => {
                   const rows = table.getRowModel().rows;
                   const rootRows = rows.filter(row => !row.original["parentId"]); 
+                  
                   const renderRowWithChildren = (row: Tanstack.Row<any>, currentLevel: number) => {
                     const childRows = rows.filter(r => r.original["parentId"] === row.original["id"]);
                     const isExpanded = expandedRows[row.id];

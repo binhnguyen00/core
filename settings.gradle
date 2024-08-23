@@ -1,16 +1,16 @@
-rootProject.name = 'marci-core'
+rootProject.name = 'core'
 
-include 'marci-lib-common'
-project(':marci-lib-common').projectDir = new File('lib/common')
+include 'lib-common'
+project(':lib-common').projectDir = new File('lib/common')
 
-include 'marci-module-common'
-project(':marci-module-common').projectDir = new File('module/common')
+include 'module-common'
+project(':module-common').projectDir = new File('module/common')
 
-include 'marci-module-http'
-project(':marci-module-http').projectDir = new File('module/http')
+include 'module-http'
+project(':module-http').projectDir = new File('module/http')
 
-include 'marci-module-deletegraph'
-project(':marci-module-deletegraph').projectDir = new File('module/deletegraph')
+include 'module-deletegraph'
+project(':module-deletegraph').projectDir = new File('module/deletegraph')
 
-include 'marci-module-db-connect-service'
-project(':marci-module-db-connect-service').projectDir = new File('module/db-connect-service')
+include 'module-db-connect-service'
+project(':module-db-connect-service').projectDir = new File('module/db-connect-service')
