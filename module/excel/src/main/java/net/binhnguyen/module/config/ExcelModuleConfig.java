@@ -7,11 +7,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(
-    basePackages = {
-        "net.binhnguyen.module.xlsx",
-    }
+  basePackages = {
+    "net.binhnguyen.module.excel",
+  }
 )
 @EnableConfigurationProperties
 @EnableTransactionManagement
-public class XlsxModuleConfig {
+public class ExcelModuleConfig {
 }

@@ -15,5 +15,5 @@ project(':module-deletegraph').projectDir = new File('module/deletegraph')
 include 'module-db-connect-service'
 project(':module-db-connect-service').projectDir = new File('module/db-connect-service')
 
-include 'module-xlsx'
-project(':module-xlsx').projectDir = new File('module/xlsx')
+include 'module-excel'
+project(':module-excel').projectDir = new File('module/excel')

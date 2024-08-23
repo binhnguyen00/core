@@ -1,0 +1,9 @@
+base.setArchivesName('module-deletegraph')
+
+dependencies {
+  implementation group: 'org.apache.poi', name: 'poi', version: "${apachePoiVersion}"
+  implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${apachePoiOOXMLVersion}"
+
+  api project(":lib-common")
+  api project(":module-common")
+}
