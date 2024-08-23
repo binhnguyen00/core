@@ -130,7 +130,7 @@ export function DataTable({
                 </div>
               ) : null;
               const archiveBtn = onArchive ? (
-                <div className="clickable text-center" onClick={() => onActive(selectedRecordsIds)}> 
+                <div className="clickable text-center" onClick={() => onArchive(selectedRecordsIds)}> 
                   <div><BsArchiveFill/></div>
                   {"Archive"} 
                 </div>
