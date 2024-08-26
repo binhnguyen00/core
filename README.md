@@ -7,7 +7,7 @@
 - Modules for special use case:
   - Database connection utils using Java Connection & DataSource.
   - Replace JPA deletion with custom DeleteGraph, works like binary tree. Helps decrease delete execution time in large records deletion.
-  - Http with BaseController ready for extend.
+  - Http with BaseController ready for extend. Support RESTful & Remote procedure call.
   - Excel helpers.
  
 ## 2. React
