@@ -131,6 +131,11 @@ public class ExcelLogic {
     }
   }
 
+  public <T> List<T> readWorkbook(String pathToWorkbook, @NonNull String sheetName, @NonNull Class<T> clazz) throws IOException {
+    List<Record> data = readWorkbook(pathToWorkbook, sheetName);
+    return RecordUtils.convertAsClazz(data, clazz);
+  }
+
   public List<Record> readWorkbook(String pathToWorkbook, @NonNull String sheetName) throws IOException {
     List<Record> data = new ArrayList<>();
 
@@ -180,8 +185,6 @@ public class ExcelLogic {
     List<Record> data = readWorkbook(pathToWorkbook, sheetName);
     return RecordUtils.convertAsClazz(data, clazz);
   }
-
-
 
   private String getCellValueAsString(Cell cell) {
     if (cell == null) return "";

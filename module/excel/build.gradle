@@ -1,4 +1,4 @@
-base.setArchivesName('module-deletegraph')
+base.setArchivesName('module-excel')
 
 dependencies {
   implementation group: 'org.apache.poi', name: 'poi', version: "${apachePoiVersion}"
