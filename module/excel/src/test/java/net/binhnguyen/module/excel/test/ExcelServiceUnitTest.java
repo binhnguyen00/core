@@ -1,5 +1,6 @@
 package net.binhnguyen.module.excel.test;
 
+import net.binhnguyen.lib.common.Record;
 import net.binhnguyen.module.config.ExcelModuleConfig;
 import net.binhnguyen.module.excel.ExcelLogic;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.IOException;
+import java.util.List;
 
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.NONE,
@@ -42,9 +44,19 @@ public class ExcelServiceUnitTest {
   @Test
   @Tag("unit")
   public void testCreateWorkbook() throws IOException {
-    try (Workbook wb = logic.createWorkbook("test.xlsx", "Sheet1")) {
+    try (Workbook wb = logic.createWorkbook("workbooks/test.xlsx", "Sheet1")) {
       Assertions.assertNotNull(wb);
-      logic.removeWorkbook("test.xlsx");
+      logic.removeWorkbook("workbooks/test.xlsx");
+    }
+  }
+
+  @Test
+  @Tag("unit")
+  public void testReadWorkbook() throws IOException {
+    try (Workbook wb = logic.getWorkbook("workbooks/test.xlsx")) {
+      Assertions.assertNotNull(wb);
+      List<Record> data = logic.readWorkbook("workbooks/test.xlsx", "data");
+      Assertions.assertNotNull(data);
     }
   }
 }

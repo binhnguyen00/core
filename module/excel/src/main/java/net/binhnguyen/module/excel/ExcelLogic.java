@@ -1,35 +1,52 @@
 package net.binhnguyen.module.excel;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.binhnguyen.lib.common.Record;
+import net.binhnguyen.lib.utils.RecordUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 @Slf4j
 @Component
 public class ExcelLogic {
 
-  public Workbook createWorkbook(String filePath, String sheetName) throws IOException {
+  /**
+   * @param pathToSave Path to resources folder. Eg: "workbooks/test.xlsx"
+   * @return Apache.poi XSSFWorkbook (.xlsx)
+   */
+  public Workbook createWorkbook(@NonNull String pathToSave, @NonNull String sheetName) throws IOException {
     try (
-      FileOutputStream fos = new FileOutputStream(filePath);
-      Workbook workbook = new XSSFWorkbook()
+      FileOutputStream fos = new FileOutputStream(pathToSave);
+      Workbook workbook = new XSSFWorkbook() // workbook .xlsx
     ) {
-      if (Objects.isNull(sheetName)) workbook.createSheet();
-      else workbook.createSheet(sheetName);
+      workbook.createSheet(sheetName);
       workbook.write(fos);
       return workbook;
     }
   }
 
-  public void removeWorkbook(String filePath) {
-    File file = new File(filePath);
+  /**
+   * @param pathToWorkbook path to resources folder. Eg: "workbooks/test.xlsx"
+   * @return Apache.poi Workbook. About the file extension, it depends.
+   */
+  public Workbook getWorkbook(@NonNull String pathToWorkbook) throws IOException {
+    try (
+      InputStream is = getClass().getClassLoader().getResourceAsStream(pathToWorkbook);
+      Workbook workbook = WorkbookFactory.create(
+        Objects.requireNonNull(is, "File not found: " + pathToWorkbook)
+      )
+    ) {
+      return workbook;
+    }
+  }
+
+  public void removeWorkbook(String pathToWorkbook) {
+    File file = new File(pathToWorkbook);
     if (file.exists()) {
       if (file.delete()) {
         log.info("Delete {} successfully.", file.getName());
@@ -37,21 +54,21 @@ public class ExcelLogic {
         log.info("Delete {} failed.", file.getName());
       }
     } else {
-      log.info("File {} does not exist.", filePath);
+      log.info("File {} does not exist.", pathToWorkbook);
     }
   }
 
-  public void writeWorkbook(List<Record> data, String filePath, String sheetName) throws IOException {
+  public void writeWorkbook(List<Record> data, @NonNull String pathToWorkbook, @NonNull String sheetName) throws IOException {
     try (
-      Workbook workbook = createWorkbook(filePath, sheetName);
-      FileOutputStream fos = new FileOutputStream(filePath)
+      Workbook workbook = createWorkbook(pathToWorkbook, sheetName);
+      FileOutputStream fos = new FileOutputStream(pathToWorkbook)
     ) {
       if (data.isEmpty()) return;
 
       // Get or create the sheet
       Sheet sheet;
-      if (sheetName == null || sheetName.isEmpty()) {
-        sheet = workbook.createSheet("Sheet1");
+      if (sheetName.isEmpty()) {
+        sheet = workbook.createSheet();
       } else {
         sheet = workbook.getSheet(sheetName);
         if (sheet == null) {
@@ -98,13 +115,10 @@ public class ExcelLogic {
     }
   }
 
-  public List<Record> readWorkbook(String filePath, String sheetName) throws IOException {
+  public List<Record> readWorkbook(String pathToWorkbook, @NonNull String sheetName) throws IOException {
     List<Record> data = new ArrayList<>();
 
-    try (
-      FileInputStream fis = new FileInputStream(filePath);
-      Workbook workbook = WorkbookFactory.create(fis) // Open & read the Workbook
-    ) {
+    try (Workbook workbook = getWorkbook(pathToWorkbook)) {
 
       // Get the sheet
       Sheet sheet = workbook.getSheet(sheetName);
@@ -115,10 +129,7 @@ public class ExcelLogic {
 
       // Read header row
       Row headerRow = sheet.getRow(0);
-      if (headerRow == null) {
-        throw new IllegalStateException("The header row is missing.");
-      }
-
+      if (headerRow == null) throw new IllegalStateException("The header row is missing.");
       Map<Integer, String> headerMap = new HashMap<>();
       for (Cell cell : headerRow) {
         headerMap.put(cell.getColumnIndex(), cell.getStringCellValue());
@@ -142,6 +153,11 @@ public class ExcelLogic {
     }
 
     return data;
+  }
+
+  public <T> List<T> getDataAsClazz(String pathToWorkbook, String sheetName, Class<T> clazz) throws IOException {
+    List<Record> data = readWorkbook(pathToWorkbook, sheetName);
+    return RecordUtils.convertAsClazz(data, clazz);
   }
 
   private String getCellValueAsString(Cell cell) {
