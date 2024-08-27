@@ -11,6 +11,22 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author Bình Nguyễn
+ * @Email jackjack2000.kahp@gmail.com
+ * @NOTICE!!!: Each Workbook can contain as any Sheet as you want. <br/>
+ * In each Sheet, the principal is that: <br/>
+ *  - The 1st Row should be started with "METADATA", as it contains your information about the sheet. <br/>
+ *  - The 2nd Row should be your headers. <br/>
+ *  - The rest are your data. <br/>
+ * Eg: <br/>
+ * [Row 0 : Cell 0] METADATA: Employee Table. Has name, age. <br/>
+ * [Row 1 : Cell 0] Jack. <br/>
+ * [Row 1 : Cell 1] 24. <br/>
+ * [Row 2 : Cell 0] John. <br/>
+ * [Row 2 : Cell 1] 25. <br/>
+ * ...
+ */
 @Slf4j
 @Component
 public class ExcelLogic {
@@ -128,7 +144,12 @@ public class ExcelLogic {
       }
 
       // Read header row
-      Row headerRow = sheet.getRow(0);
+      Row firstRow = sheet.getRow(0);
+      Row headerRow;
+      // Find metadata
+      if (getCellValueAsString(firstRow.getCell(firstRow.getFirstCellNum())).startsWith("METADATA")) {
+        headerRow = sheet.getRow(firstRow.getFirstCellNum() + 1);
+      } else headerRow = firstRow;
       if (headerRow == null) throw new IllegalStateException("The header row is missing.");
       Map<Integer, String> headerMap = new HashMap<>();
       for (Cell cell : headerRow) {
@@ -136,8 +157,8 @@ public class ExcelLogic {
       }
 
       // Read data rows
-      for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-        Row row = sheet.getRow(rowIndex);
+      for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+        Row row = sheet.getRow(i);
         if (row == null) continue; // Skip empty rows
 
         Record record = new Record();
@@ -159,6 +180,8 @@ public class ExcelLogic {
     List<Record> data = readWorkbook(pathToWorkbook, sheetName);
     return RecordUtils.convertAsClazz(data, clazz);
   }
+
+
 
   private String getCellValueAsString(Cell cell) {
     if (cell == null) return "";
