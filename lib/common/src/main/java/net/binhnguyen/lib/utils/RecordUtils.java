@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class RecordUtils {
 
           // Retrieve the value from the record and set it on the class instance
           Object value = singleton.get(fieldName);
-          field.set(instance, value);
+          if (Objects.nonNull(value)) field.set(instance, value);
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
           log.error("Error setting field value: {}", e.getMessage(), e);
