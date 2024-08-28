@@ -13,9 +13,9 @@ import java.util.Objects;
 @NoArgsConstructor
 public class DateUtils {
 
-  public static final String date         = "dd-MM-yyyy";
-  public static final String timestamp    = "dd-MM-yyyy HH:mm:ss";
-  public static final String timestampTz  = "dd-MM-yyyy HH:mm:ssZ";
+  public static final String DATE           = "dd-MM-yyyy";
+  public static final String TIMESTAMP      = "dd-MM-yyyy HH:mm:ss";
+  public static final String TIMESTAMP_TZ   = "dd-MM-yyyy HH:mm:ssZ";
 
   private static String corrector(String target) {
     if (Objects.isNull(target)) {
@@ -33,36 +33,39 @@ public class DateUtils {
   public static LocalDate toLocalDate(String target) {
     target = corrector(target);
     if (Objects.nonNull(target)) {
-      return LocalDate.parse(target);
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE);
+      return LocalDate.parse(target, formatter);
     } else return null;
   }
 
   public static LocalDateTime toLocalDateTime(String target) {
     target = corrector(target);
     if (Objects.nonNull(target)) {
-      return LocalDateTime.parse(target);
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIMESTAMP);
+      return LocalDateTime.parse(target, formatter);
     } else return null;
   }
 
   public static ZonedDateTime toZonedDateTime(String target) {
     target = corrector(target);
     if (Objects.nonNull(target)) {
-      return ZonedDateTime.parse(target);
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIMESTAMP_TZ);
+      return ZonedDateTime.parse(target, formatter);
     } else return null;
   }
 
   public static String toTimestampString(LocalDateTime target) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(timestamp);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIMESTAMP);
     return target.format(formatter);
   }
 
   public static String toTimestampTzString(ZonedDateTime target) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(timestampTz);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIMESTAMP_TZ);
     return target.format(formatter);
   }
 
   public static String toLocalDateString(LocalDateTime target) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(date);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE);
     return target.format(formatter);
   }
 }

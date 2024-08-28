@@ -22,14 +22,14 @@ abstract public class BaseEntity extends Persistable<Long> {
   @Column(name = "creator")
   protected String creator;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.timestamp)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.TIMESTAMP)
   @Column(name = "created_time")
   protected LocalDateTime createdTime;
 
   @Column(name = "modifier")
   protected String modifier;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.timestamp)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtils.TIMESTAMP)
   @Column(name = "modified_time")
   protected LocalDateTime modifiedTime;
 
