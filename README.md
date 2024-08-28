@@ -11,7 +11,9 @@
   - Excel helpers.
  
 ## 2. React
-- Data Table with toolbar [ create, delete, search bar(call api) ], footer, rows and cols (resizeable).
+- Data Table
+  - Based on Tanstack's headless table  
+  - with toolbar [ create, delete, search bar(call api) ], footer, rows and cols (resizeable). I designed for easy custimization.
 - File Explorer.
 - Input fields.
 - Buttons with style.
