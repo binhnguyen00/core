@@ -39,14 +39,15 @@ public class ExcelServiceUnitTest {
   @Test @Tag("unit")
   public void testAll() throws IOException {
     testCreateWorkbook();
+    testReadWorkbook();
   }
 
   @Test
   @Tag("unit")
   public void testCreateWorkbook() throws IOException {
-    try (Workbook wb = logic.createWorkbook("workbooks/test.xlsx", "Sheet1")) {
+    try (Workbook wb = logic.createWorkbook("temp.xlsx", "Sheet1")) {
       Assertions.assertNotNull(wb);
-      logic.removeWorkbook("workbooks/test.xlsx");
+      logic.removeWorkbook("temp.xlsx");
     }
   }
 
@@ -56,7 +57,7 @@ public class ExcelServiceUnitTest {
     try (Workbook wb = logic.getWorkbook("workbooks/test.xlsx")) {
       Assertions.assertNotNull(wb);
       List<Record> data = logic.readWorkbook("workbooks/test.xlsx", "data");
-      Assertions.assertNotNull(data);
+      Assertions.assertEquals(10, data.size());
     }
   }
 }

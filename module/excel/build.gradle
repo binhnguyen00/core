@@ -2,7 +2,7 @@ base.setArchivesName('module-excel')
 
 dependencies {
   implementation group: 'org.apache.poi', name: 'poi', version: "${apachePoiVersion}"
-  implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${apachePoiOOXMLVersion}"
+  implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${apachePoiVersion}"
 
   api project(":lib-common")
   api project(":module-common")

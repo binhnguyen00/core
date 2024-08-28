@@ -74,7 +74,7 @@ public class ExcelLogic {
     }
   }
 
-  public void writeWorkbook(List<Record> data, @NonNull String pathToWorkbook, @NonNull String sheetName) throws IOException {
+  public void exportWorkbook(List<Record> data, @NonNull String pathToWorkbook, @NonNull String sheetName) throws IOException {
     try (
       Workbook workbook = createWorkbook(pathToWorkbook, sheetName);
       FileOutputStream fos = new FileOutputStream(pathToWorkbook)
@@ -131,6 +131,10 @@ public class ExcelLogic {
     }
   }
 
+  /**
+   * Can only read if clazz has fields that's type are String, Integer, Double, Float, etc. <br/>
+   * Don't use if clazz has fields that's type are Enum, Date, etc.
+   */
   public <T> List<T> readWorkbook(String pathToWorkbook, @NonNull String sheetName, @NonNull Class<T> clazz) throws IOException {
     List<Record> data = readWorkbook(pathToWorkbook, sheetName);
     return RecordUtils.convertAsClazz(data, clazz);
@@ -162,7 +166,8 @@ public class ExcelLogic {
       }
 
       // Read data rows
-      for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+      // Start with the 3rd row. The 1st & 2nd rows are for metadata & row header
+      for (int i = 2; i <= sheet.getLastRowNum(); i++) {
         Row row = sheet.getRow(i);
         if (row == null) continue; // Skip empty rows
 
