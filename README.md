@@ -15,6 +15,7 @@
 - Gradle 8.x
 ### Build
 ```
+cd <where build.gradle is placed>
 gradle clean build publishToMavenLocal -x test
 ```
  
@@ -33,5 +34,6 @@ gradle clean build publishToMavenLocal -x test
 - pnpm
 ### Build
 ```
+cd ./ui/lib
 pnpm run build
 ```
