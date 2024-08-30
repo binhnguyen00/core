@@ -1,7 +1,7 @@
 import { Api } from "./Api";
 import { CallBack, HttpMethod } from "./Interface";
 
-export type RPCRequest = {
+type RPCRequest = {
   version: string,
   component: string,
   service: string,
@@ -13,7 +13,7 @@ export type RPCRequest = {
  */
 export class RPC extends Api { 
 
-  call(component: string, service: string, params: any, successCB: CallBack, failCB?: CallBack) {
+  call(component: string, service: string, params: any, successCB: CallBack, failCB?: CallBack): void {
     const url: string = this.initialUrl("rpc/call");
     const rpcRequest: RPCRequest = {
       version: '1.0',
