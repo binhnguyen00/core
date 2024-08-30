@@ -15,7 +15,7 @@ interface VScreenSplitProps {
 export function VScreenSplit({ components }: VScreenSplitProps) {
   if (!components || !components.length) return null;
 
-  const [leftPaneWidth, setLeftPaneWidth] = React.useState<number>(300);
+  const [leftPaneWidth, setLeftPaneWidth] = React.useState<number>(200);
   const isResizing = React.useRef<boolean>(false);
 
   const onMouseDown = (e: React.MouseEvent) => {
