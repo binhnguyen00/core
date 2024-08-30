@@ -45,13 +45,13 @@ export abstract class Api {
     return requestInit;
   }
 
-  doFetch(url: string, requestInit: RequestInit, successCB: CallBack, failCB?: CallBack) {
+  async doFetch(url: string, requestInit: RequestInit, successCB: CallBack, failCB?: CallBack) {
     if (!failCB) failCB = (response: ServerResponse) => {
       const errorContent = (<div> {response.message} </div>);
       PopupManager.createDangerPopup(errorContent);
     }
 
-    fetch(url, requestInit)
+    await fetch(url, requestInit)
     .then((response: Response) => {
       return response.json();
     }).then((serverResponse: ServerResponse) => {
@@ -61,7 +61,7 @@ export abstract class Api {
         if (failCB) failCB(serverResponse);
       }
     }).catch((error: Error) => {
-      console.log(`Marci UI Lib Error: \n${error}`);
+      console.log(`Core UI Lib Error: \n${error}`);
       alert("Ops! Something wrong with your request :)");
     });
   }
